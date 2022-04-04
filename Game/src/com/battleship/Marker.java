@@ -1,4 +1,8 @@
 package com.battleship;
+
+
+
+
 //add values for hit X, miss O, empty ""
 public enum Marker {
     HIT("X"), MISS("O"), EMPTY(" ");
@@ -11,3 +15,4 @@ public enum Marker {
 
 
 }
+
