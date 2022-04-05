@@ -1,7 +1,7 @@
 package com.battleship;
 
 public class Ship {
-//location
+//location is on the map
 // field is sunk
 // everytime ship gets hit ship loses a hitpoint
 
