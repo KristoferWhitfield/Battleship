@@ -15,23 +15,12 @@ public class Ship {
         setShipHealth(shipHealth);
     }
 
-    //check to see if logic is right
-    public int checkShipHealth(){
-        // needs to count the amount of markers
-        // needs to determine if the ship is hit based on the board markers
-
-        /*if(){
-
-            shipHealth -= 1;
-        } else if (shipHealth == 0){
+    public void hit(){
+        shipHealth--;
+        if (shipHealth <= 0) {
+            System.out.println(ship + " SUNK!");
             isSunk = true;
-            System.out.println(getShip() + " has sunk.");
-
-        }*/
-
-
-        return shipHealth;
-
+        }
     }
 
     private void setShipType(ShipType ship) {

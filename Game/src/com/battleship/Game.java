@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.util.Prompter;
 
 
 /**
@@ -15,14 +15,10 @@ import java.util.Scanner;
 public class Game {
     private int playerCount;
 
-    private Player playerOne;
-    private Player playerTwo;
-
     private Board playerBoardOne;
     private Board playerBoardTwo;
 
     private static Scanner in = new Scanner(System.in);
-
 
     public void start() throws FileNotFoundException {
 
@@ -54,9 +50,6 @@ public class Game {
         while (scan.hasNextLine()) {
             System.out.println(scan.nextLine());
         }
-//        System.out.println("\n");
-//        System.out.print("1 or 2 player game? ");
-        playerCount = Integer.parseInt(in.nextLine());
     }
 
     private Board playerSetup() {
