@@ -19,7 +19,9 @@ public class Game {
 
         welcome();
         gameBoard = BoardFactory.newInstance();
+
         battle();
+
         exit();
     }
 
