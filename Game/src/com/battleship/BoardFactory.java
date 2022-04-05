@@ -4,107 +4,197 @@ import java.util.*;
 
 import static com.battleship.Marker.*;
 
-/**
- *
- */
-class BoardFactory {
+
+public class BoardFactory {
     private Scanner in = new Scanner(System.in);
-    Map<Integer, ArrayList<Marker>> mapOne;
-    Map<Integer, ArrayList<Marker>> mapTwo;
-    private String location;
+    Map<Integer, ArrayList<Marker>> boardMap;
     private String input;
 
 
-    public Board createCustom() {
+/*    public Board createCustom() {
+        boardMap = createMap();
 
-
-        System.out.println("Configuring Player 1 ships.");
-
-        mapOne = createMap();
-
-        for (Ship ship : Ship.values()) {
-            addShip(mapOne, ship);
+        for (ShipType ship : ShipType.values()) {
+            addShip(boardMap, ship);
         }
 
-        return null;
-    }
+        return new Board(boardMap);
+    }*/
 
-    private void addShip(Map<Integer, ArrayList<Marker>> map, Ship ship) {
+/*    private void addShip(Map<Integer, ArrayList<Marker>> map, ShipType ship) {
         boolean validCoord = false;
         boolean validLoc = false;
         boolean validOrientation = false;
+        String coord = null;
+        String orientation = null;
 
-        String coord;
-        String orientation;
-        while (!validCoord || !validLoc) {
-            System.out.print("Enter location for the ship [A0 to J9]: ");
-            input = in.next();
-
-            while (!validCoord) {
+        while (!validLoc) {
+            do {
+                System.out.print("Enter location for the ship [A0 to J9]: ");
+                input = in.next();
                 validCoord = validateCoordinate(input);
-            }
+            } while (!validCoord);
             coord = input;
 
-            while (!validOrientation) {
+            do {
                 System.out.print("[V]ertical or [H]orizontal: ");
                 input = in.next();
-                validateOrientation(input);
-            }
+                validOrientation = validateOrientation(input);
+            } while (!validOrientation);
             orientation = input;
 
-            while (!validLoc) {
-                validLoc = validateShipLocation(coord, orientation, mapOne);
+           // validLoc = validateShipLocation(coord, orientation, ship.getSize(), boardMap);
+        }
+
+        addShip(coord, orientation, ship, map);
+    }*/
+
+     void addShip(String coord, String orientation, ShipType ship,
+            Map<Integer, ArrayList<Marker>> map) {
+        int xb = 0;
+        int yb = 0;
+        int ya = Character.getNumericValue(coord.charAt(0)) - 10;
+        int xa = Character.getNumericValue(coord.charAt(1));
+
+        Marker marker = null;
+        switch (ship) {
+            case CARRIER:
+                marker = CARRIER;
+                break;
+            case BATTLESHIP:
+                marker = BATTLESHIP;
+                break;
+            case DESTROYER:
+                marker = DESTROYER;
+                break;
+            case SUBMARINE:
+                marker = SUBMARINE;
+                break;
+            case PATROL_BOAT:
+                marker = PATROL_BOAT;
+                break;
+        }
+
+        if (orientation.equals("H")) {
+            xb = xa + ship.getSize();
+
+            for (int i = xa; i < xb; i++) {
+                map.get(ya).set(i, marker);
+            }
+
+        } else {
+            yb = ya + ship.getSize();
+
+            for (int i = ya; i < yb; i++) {
+                map.get(i).set(xa, marker);
             }
         }
     }
 
-    private boolean validateOrientation(String input) {
-        return input.matches("[vV|hH]");
+    boolean validateOrientation(String input) {
+        return input.matches("[v|V]|[h|H]");
     }
 
-    private boolean validateCoordinate(String input) {
-        boolean success = false;
+    boolean validateCoordinate(String input) {
+        return input.matches("[aA-jJ][0-9]");
+    }
 
-        if (input.matches("[aA-jJ][0-9]")) {
-            success = true;
+    boolean validateShipLocation(String coord, String orientation, int size,
+            Board board) {
+        boolean spotAvailable = true;
+        boolean inBounds = true;
+        int xb = 0;
+        int yb = 0;
+
+
+
+        int ya = Character.getNumericValue(coord.charAt(0)) - 10;
+        int xa = Character.getNumericValue(coord.charAt(1));
+
+
+        if (orientation.equals("H")) {
+            xb = xa + size;
+
+            if (xb >= 10) {
+                System.out.println("Error: Ship cannot be placed out of bounds.");
+                inBounds = false;
+            }
+            else {
+                for (int i = xa; i < xb; i++) {
+                    if (board.getMap().get(ya).get(i) != EMPTY) {
+                        System.out.println("Error: ship cannot be placed on " + board.getMap().get(ya).get(i));
+                        spotAvailable = false;
+                        break;
+                    }
+                }
+            }
         }
         else {
-            System.out.println("Incorrect coordinates given: ");
+            yb = ya + size;
+
+            if (yb >= 10) {
+                System.out.println("Error: Ship cannot be placed out of bounds.");
+                inBounds = false;
+            }
+            else {
+                for (int i = ya; i < yb; i++) {
+                    if (board.getMap().get(i).get(xa) != EMPTY) {
+                        System.out.println("Error: ship cannot be placed on " + board.getMap().get(i).get(xa));
+                        spotAvailable = false;
+                        break;
+                    }
+                }
+            }
         }
-        return success;
+
+        return spotAvailable && inBounds;
     }
 
-    private boolean validateShipLocation(String coord, String orientation, Map<Integer, ArrayList<Marker>> mapOne) {
-        boolean success = false;
+/*    public Board newRandom() {
+        boolean validCoord = false;
+        boolean validLoc = false;
+        boolean validOrientation = false;
+        String input;
+        String coord = null;
+        String orientation = null;
 
-        if (input.matches("[A-J][0-9]")) {
+        Map<Integer, ArrayList<Marker>> randMap = createMap();
+        int rand1;
+        int rand2;
+        while (!validLoc) {
+            do {
+                System.out.print("Enter location for the ship [A0 to J9]: ");
+                input = in.next();
+                validCoord = validateCoordinate(input);
+            } while (!validCoord);
+            coord = input;
 
+            do {
+                System.out.print("[V]ertical or [H]orizontal: ");
+                input = in.next();
+                validOrientation = factory.validateOrientation(input);
+            } while (!validOrientation);
+            orientation = input;
+
+            validLoc = factory.validateShipLocation(coord, orientation, ship.getSize(), board);
         }
 
 
-        return success;
-    }
-
-    public Board getRandom() {
-        initializeBoards();
         return null;
-    }
+    }*/
 
-    private void initializeBoards() {
-
-    }
-
-    private Map<Integer, ArrayList<Marker>> createMap() {
-        Map newMap = new HashMap<Integer, ArrayList<Marker>>();
+    static Map<Integer, ArrayList<Marker>> createMap() {
+        Map<Integer, ArrayList<Marker>> newMap = new HashMap();
 
         for (int i = 0; i < 10; i++) {
             newMap.put(i, new ArrayList<Marker>
                     (Arrays.asList(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)));
         }
 
+        return newMap;
     }
 
     public static Board newInstance() {
-        return null;
+        return new Board(createMap());
     }
 }
