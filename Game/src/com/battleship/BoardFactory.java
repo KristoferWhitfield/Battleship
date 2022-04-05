@@ -4,9 +4,7 @@ import java.util.*;
 
 import static com.battleship.Marker.*;
 
-/**
- *
- */
+
 public class BoardFactory {
     private Scanner in = new Scanner(System.in);
     Map<Integer, ArrayList<Marker>> mapOne;
