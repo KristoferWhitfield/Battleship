@@ -11,14 +11,16 @@ public class Game {
     private Player playerOne;
     private Player playerTwo;
 
-    private Board gameBoard;
+    private Board playerBoardOne;
+    private Board playerBoardTwo;
 
-    private Scanner in = new Scanner(System.in);
+    private static Scanner in = new Scanner(System.in);
 
     public void start() {
 
         welcome();
-        gameBoard = BoardFactory.newInstance();
+        playerBoardOne = playerSetup();
+        playerBoardOne = playerSetup();
 
         battle();
 
@@ -44,14 +46,45 @@ public class Game {
         playerCount = Integer.parseInt(in.nextLine());
     }
 
-    private HumanPlayer playerSetup() {
+    private Board playerSetup() {
+        Board board = BoardFactory.newInstance();
+
+        for (ShipType s : ShipType.values()) {
+            playerInput(board, s);
+        }
 
         return null;
     }
 
-    private ComputerPlayer computerSetup() {
-        return null;
+    private void playerInput(Board board, ShipType ship) {
+        BoardFactory factory = new BoardFactory();
+        boolean validCoord = false;
+        boolean validLoc = false;
+        boolean validOrientation = false;
+        String input;
+        String coord = null;
+        String orientation = null;
+
+        while (!validLoc) {
+            do {
+                System.out.print("Enter location for the ship [A0 to J9]: ");
+                input = in.next();
+                validCoord = factory.validateCoordinate(input);
+            } while (!validCoord);
+            coord = input;
+
+            do {
+                System.out.print("[V]ertical or [H]orizontal: ");
+                input = in.next();
+                validOrientation = factory.validateOrientation(input);
+            } while (!validOrientation);
+            orientation = input;
+
+            validLoc = factory.validateShipLocation(coord, orientation, ship.getSize(), board);
+        }
+        factory.addShip(coord, orientation, ship, board.getMap());
     }
+
 
     private void battle() {
 
