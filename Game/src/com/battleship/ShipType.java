@@ -3,6 +3,7 @@ package com.battleship;
 // hitpoints
 //locations
 public enum ShipType {
+
     CARRIER(5),
     BATTLESHIP(4),
     DESTROYER( 3),
@@ -18,4 +19,5 @@ public enum ShipType {
     int getSize() {
         return this.size;
     }
+
 }
