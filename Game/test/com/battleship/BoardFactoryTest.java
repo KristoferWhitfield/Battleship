@@ -34,28 +34,29 @@ public class BoardFactoryTest {
 
     @Test
     public void validateShipLocation_shouldReturnTrue_emptyGrid() {
-        Map<Integer, ArrayList<Marker>> map = factory.createMap();
-        assertTrue(factory.validateShipLocation("b1", "H", 5, map));
+
+        Board board = factory.newInstance();
+        assertTrue(factory.validateShipLocation("b1", "H", 5, board));
     }
 
     @Test
     public void validateShipLocation_shouldReturnFalse_outOfBounds() {
-        Map<Integer, ArrayList<Marker>> map = factory.createMap();
-        assertFalse(factory.validateShipLocation("c8", "H", 5, map));
+        Board board = factory.newInstance();
+        assertFalse(factory.validateShipLocation("c8", "H", 5, board));
     }
 
     @Test
     public void validateShipLocation_shouldReturnFalse_occupiedLocation() {
-        Map<Integer, ArrayList<Marker>> map = factory.createMap();
-        factory.addShipSuccessful("b1", "V", ShipType.CARRIER, map);
-        assertFalse(factory.validateShipLocation("c0", "H", 3, map));
+        Board board = factory.newInstance();
+        factory.addShip("b1", "V", ShipType.CARRIER, board.getMap());
+        assertFalse(factory.validateShipLocation("c0", "H", 3, board));
     }
 
     @Ignore
     @Test
     public void addShipSuccessful() {
         Map<Integer, ArrayList<Marker>> map = factory.createMap();
-        factory.addShipSuccessful("b2", "V", ShipType.CARRIER, map);
+        factory.addShip("b2", "V", ShipType.CARRIER, map);
         for (var row : map.values()) {
             System.out.println(row);
         }

@@ -12,6 +12,15 @@ public enum Marker {
     SUBMARINE("S"),
     PATROL_BOAT("P");
 
+    private final String p;
+
+    Marker(String p) {
+        this.p = p;
+    }
+
+    public String getMark() {
+        return p;
+    }
 }
 
 

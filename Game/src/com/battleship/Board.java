@@ -62,7 +62,7 @@ class Board {
             System.out.println(" ---- - - - - - - - - - - - - - - - - - - - - ");
             System.out.print(" " + row.getKey() + "  | ");
             for (Marker m : row.getValue()) {
-                System.out.print(m.marker + " : ");
+                System.out.print(m.getMark() + " : ");
             }
 
             System.out.println();
@@ -81,7 +81,7 @@ class Board {
             System.out.print(" " + row.getKey() + "  | ");
             for (Marker m : row.getValue()) {
                 if (viewable.contains(m)) {
-                    System.out.print(m.marker + " : ");
+                    System.out.print(m.getMark() + " : ");
                 }
                 else {
                     System.out.print("  : ");

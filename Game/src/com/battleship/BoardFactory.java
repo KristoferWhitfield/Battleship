@@ -106,11 +106,8 @@ public class BoardFactory {
         int xb = 0;
         int yb = 0;
 
-
-
         int ya = Character.getNumericValue(coord.charAt(0)) - 10;
         int xa = Character.getNumericValue(coord.charAt(1));
-
 
         if (orientation.equals("H")) {
             xb = xa + size;
