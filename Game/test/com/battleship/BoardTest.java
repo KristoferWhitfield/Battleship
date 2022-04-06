@@ -3,10 +3,7 @@ package com.battleship;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.battleship.Marker.*;
 
@@ -22,12 +19,20 @@ public class BoardTest {
 
     @Test
     public void displayFull() {
-        board.displayStrategic();
+        List<String> lines = board.displayStrategic();
+
+        for (String s: lines) {
+            System.out.println(s);
+        }
     }
 
     @Test
     public void displayShots() {
-        board.displayShots();
+        List<String> lines = board.displayShots();
+
+        for (String s: lines) {
+            System.out.println(s);
+        }
     }
 
     public Map<Integer, ArrayList<Marker>> createGenericMap() {

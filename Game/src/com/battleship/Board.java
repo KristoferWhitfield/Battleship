@@ -6,13 +6,14 @@ import com.apps.util.Prompter;
 import java.util.*;
 
 import static com.battleship.Board.Color.*;
+import static com.battleship.Marker.*;
 
 /**
  *  This class serves as the battlefield and display for the game.
  */
 class Board {
     private Map<Integer, ArrayList<Marker>> boardMap;
-    private List<Ship> ships = new ArrayList<>();
+    private ArrayList<Ship> ships = new ArrayList<>();
     private int liveShips;
 
     Board(Map<Integer, ArrayList<Marker>> map) {
@@ -29,26 +30,38 @@ class Board {
         boolean result = false;
         int shipSize = -1;
         Marker mark = boardMap.get(row).get(column);
+        ShipType hitShip = null;
 
-        switch (mark) {
-            case EMPTY:
-                boardMap.get(row).set(column, Marker.MISS);
-                break;
-            case CARRIER:       shipSize++;
-            case BATTLESHIP:    shipSize++;
-            case DESTROYER:     shipSize++;
-            case SUBMARINE:     shipSize++;
-            case PATROL_BOAT:   shipSize++;
-                boardMap.get(row).set(column, Marker.HIT);
-                result = true;
-                break;
-            case HIT:
-            case MISS:
-                break;
+        if (mark == EMPTY) {
+            boardMap.get(row).set(column, MISS);
+        } else if (mark == CARRIER) {
+            hitShip = ShipType.CARRIER;
+            boardMap.get(row).set(column, HIT);
+            result = true;
+        } else if (mark == BATTLESHIP) {
+            hitShip = ShipType.BATTLESHIP;
+            boardMap.get(row).set(column, HIT);
+            result = true;
+        } else if (mark == DESTROYER) {
+            hitShip = ShipType.DESTROYER;
+            boardMap.get(row).set(column, HIT);
+            result = true;
+        } else if (mark == SUBMARINE) {
+            hitShip = ShipType.SUBMARINE;
+            boardMap.get(row).set(column, HIT);
+            result = true;
+        } else if (mark == PATROL_BOAT) {
+            hitShip = ShipType.PATROL_BOAT;
+            boardMap.get(row).set(column, HIT);
+            result = true;
         }
 
         if (result) {
-            ships.get(shipSize).hit();
+            for (Ship s: ships) {
+                if (s.getShip().equals(hitShip)) {
+                    s.hit();
+                }
+            }
         }
 
         shotResult(result);
@@ -73,60 +86,64 @@ class Board {
         prompter.prompt("Press enter to continue.");
     }
 
-    public void displayStrategic() {
+    public List<String> displayStrategic() {
         List<Marker> viewable =
                 new ArrayList<>(Arrays.asList(Marker.EMPTY, Marker.HIT, Marker.CARRIER, Marker.BATTLESHIP,
                                               Marker.DESTROYER, Marker.SUBMARINE, Marker.PATROL_BOAT));
 
-        display(viewable);
+        return getLines(viewable);
     }
 
-    public void displayShots() {
+    public List<String> displayShots() {
         List<Marker> viewable = new ArrayList<>(Arrays.asList(Marker.EMPTY, Marker.MISS, Marker.HIT));
 
-        display(viewable);
+        return getLines(viewable);
     }
 
-    private void display(List<Marker> viewable) {
-        System.out.println(" ---------------------------------------------");
-        System.out.println(" ---  0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 -");
+    public List<String> getLines(List<Marker> viewable) {
+        ArrayList<String> lines = new ArrayList<>();
         List<Marker> ships = new ArrayList<>(Arrays.asList(Marker.CARRIER, Marker.BATTLESHIP,
                                                            Marker.DESTROYER, Marker.SUBMARINE, Marker.PATROL_BOAT));
 
+        lines.add(" ---------------------------------------------");
+        lines.add(" ---  0 - 1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - ");
+
         for (Map.Entry<Integer, ArrayList<Marker>> row : boardMap.entrySet()) {
-            System.out.println(" ----" + WATER + " - - - - - - - - - - - - - - - - - - - - " + RESET);
+            lines.add(" ----" + WATER + " - - - - - - - - - - - - - - - - - - - - " + RESET);
             char ch = Character.toUpperCase(Character.forDigit(row.getKey() + 10,36));
 
-            System.out.print(" " + ch + "  |" + WATER + " ");
+            StringBuilder single = new StringBuilder(" " + ch + "  |" + WATER + " ");
             for (Marker m : row.getValue()) {
-                System.out.print(WATER);
+               single.append(WATER);
                 if (viewable.contains(m)) {
                     if (m.equals(Marker.HIT)) {
-                        System.out.print("" + RED + SHIP + m.getMark()  + RESET + WATER + " : " + RESET);
+                        single.append(RED).append(SHIP).append(m.getMark()).append(RESET).append(WATER).append(" : ").append(RESET);
                     }
                     else if (ships.contains(m)) {
-                        System.out.print("" + SHIP + m.getMark() + RESET + WATER + " : " + RESET);
+                        single.append(SHIP).append(m.getMark()).append(RESET).append(WATER).append(" : ").append(RESET);
+                    }
+                    else if (m.equals(Marker.MISS)) {
+                        single.append(BLACK).append(WATER).append(m.getMark()).append(RESET).append(WATER).append(" : ").append(RESET);
                     }
                     else {
-                        System.out.print(m.getMark() + " : ");
+                        single.append(m.getMark()).append(" : ");
                     }
                 }
                 else {
-                    System.out.print("  : ");
+                    single.append("  : ");
                 }
-                System.out.print(RESET);
-            }
+                single.append(RESET);
 
-            System.out.println();
+            }
+            lines.add(single.toString());
         }
-        System.out.println(" ---------------------------------------------");
+        lines.add(" ----" + WATER +" ----------------------------------------" + RESET);
+
+        return lines;
     }
 
     public boolean stillAlive() {
-        boolean result;
         int count = 0;
-        //return ships.stream().filter(Ship::isSunk)
-        //            .count() != liveShips;
 
         for(Ship s : ships) {
             if (s.isSunk()) {
@@ -145,6 +162,7 @@ class Board {
     public static enum Color {
         RESET("\033[0m"),
         RED("\033[1;31m"),
+        BLACK("\033[30m"),
         WATER("\033[46m"),
         SHIP("\033[40m");
 
