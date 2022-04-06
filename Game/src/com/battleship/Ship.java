@@ -1,34 +1,21 @@
 package com.battleship;
 
 public class Ship {
-//location is on the map
-// field is sunk
-// everytime ship gets hit ship loses a hitpoint
-
     private int shipHealth;
     private ShipType ship;
     private boolean isSunk = false;
-
 
     public Ship(ShipType ship, int shipHealth){
         setShipType(ship);
         setShipHealth(shipHealth);
     }
 
-    //check to see if logic is right
-    public int checkShipHealth(){
-        // needs to count the amount of markers
-        // needs to determine if the ship is hit based on the board markers
-
-//        if(){
-//
-//            shipHealth -= 1;
-//        } else if (shipHealth == 0){
-//            isSunk = true;
-//            System.out.println(getShip() + " has sunk.");
-//
-//        }
-        return shipHealth;
+    public void hit(){
+        shipHealth--;
+        if (shipHealth <= 0) {
+            System.out.println(ship + " SUNK!");
+            isSunk = true;
+        }
     }
 
     private void setShipType(ShipType ship) {
@@ -55,6 +42,10 @@ public class Ship {
         } else if (ship.equals(ship.PATROL_BOAT)){
             this.shipHealth = 2;
         }
+    }
+
+    public boolean isSunk() {
+        return isSunk;
     }
 
     @Override

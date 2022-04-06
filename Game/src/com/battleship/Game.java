@@ -4,31 +4,24 @@ import com.apps.util.Prompter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
-
 
 
 /**
  *  This class serves as the controller for the Battleship game.
  */
 public class Game {
-    private int playerCount;
-
-    private Player playerOne;
-    private Player playerTwo;
-
     private Board playerBoardOne;
     private Board playerBoardTwo;
 
+    private Prompter prompter = new Prompter(new Scanner(System.in));
     private static Scanner in = new Scanner(System.in);
-
 
     public void start() throws FileNotFoundException {
 
         welcome();
         playerBoardOne = playerSetup();
-        playerBoardOne = playerSetup();
+        playerBoardTwo = playerSetup();
 
         battle();
 
@@ -36,104 +29,98 @@ public class Game {
     }
 
     private void welcome() throws FileNotFoundException {
-//        System.out.println(
-//                "          _      _                                        ______      \n" +
-//                "          |  |  /          /                                /         \n" +
-//                "        --|-/|-/-----__---/----__----__---_--_----__-------/-------__-\n" +
-//                "          |/ |/    /___) /   /   ' /   ) / /  ) /___)     /      /   )\n" +
-//                "        __/__|____(___ _/___(___ _(___/_/_/__/_(___ _____/______(___/_");
-//        System.out.println(
-//                "__________________________________________________________________________________\n" +
-//                "    ____     __   ______ ______   _      _____      __     _     _     __   ____  \n" +
-//                "    /   )    / |    /      /      /      /    '   /    )   /    /      /    /    )\n" +
-//                "---/__ /----/__|---/------/------/------/__-------\\-------/___ /------/----/____/-\n" +
-//                "  /    )   /   |  /      /      /      /           \\     /    /      /    /       \n" +
-//                "_/____/___/____|_/______/______/____/_/____ ___(____/___/____/____ _/_ __/________");
-        File file = new File("C:\\StudentWork\\MiniProject\\Battleship\\welcome.txt");
+        File file = new File("welcome.txt");
         Scanner scan = new Scanner(file);
         while (scan.hasNextLine()) {
             System.out.println(scan.nextLine());
         }
-//        System.out.println("\n");
-//        System.out.print("1 or 2 player game? ");
-        playerCount = Integer.parseInt(in.nextLine());
     }
 
     private Board playerSetup() {
-        Board board = BoardFactory.newInstance();
-
-        for (ShipType s : ShipType.values()) {
-            playerInput(board, s);
+        Board board = null;
+        String input = "";
+        // TODO: Convert to prompter
+        while (!input.matches("[yY]|[nN]")) {
+            input = prompter.prompt("Would you like to play with random boards? [Y/N]: ");
         }
 
-        return null;
+        if (input.matches("[yY]")) {
+            board = BoardFactory.newRandom();
+        }
+        else {
+            board = BoardFactory.newInstance();
+
+            for (ShipType s : ShipType.values()) {
+                playerInput(board, s);
+            }
+        }
+
+        return board;
     }
 
     private void playerInput(Board board, ShipType ship) {
-        BoardFactory factory = new BoardFactory();
-        boolean validCoord = false;
         boolean validLoc = false;
-        boolean validOrientation = false;
-        String input;
         String coord = null;
         String orientation = null;
 
         while (!validLoc) {
-            do {
-                System.out.print("Enter location for the ship [A0 to J9]: ");
-                input = in.next();
-                validCoord = factory.validateCoordinate(input);
-            } while (!validCoord);
-            coord = input;
 
-            do {
-                System.out.print("[V]ertical or [H]orizontal: ");
-                input = in.next();
-                validOrientation = factory.validateOrientation(input);
-            } while (!validOrientation);
-            orientation = input;
+            coord = prompter.prompt(String.format("Enter location for the %s [A0 to J9]: ", ship),
+                                    "[aA-jJ][0-9]", "" );
 
-            validLoc = factory.validateShipLocation(coord, orientation, ship.getSize(), board);
+            orientation = prompter.prompt("[V]ertical or [H]orizontal: ", "[v|V]|[h|H]", "");
+
+            validLoc = BoardFactory.validateShipLocation(coord, orientation, ship.getSize(), board);
         }
-        factory.addShip(coord, orientation, ship, board.getMap());
+
+        BoardFactory.addShip(coord, orientation, ship, board.getMap());
     }
 
 
     // pass in the map
     private void battle() {
-        ArrayList<Integer> coordinates = new ArrayList<Integer>();
-        // TODO: 4/5/2022 add in validation that the user only entered a number between 0 and 9
-        // TODO: 4/5/2022 convert int to string
-        // TODO: 4/5/2022 add explaniation of game to notepad
-        Prompter prompter = new Prompter(new Scanner(System.in));
-        // tell the player what kind of coordinate 2 numbers between 0 and 9
+        boolean gameOver = false;
 
-        // both values in array list
-        //x arraylist. 0 and y arraylist .1
-        String xCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the X coordinate" +
-                "where you want to fire: ");
-        String yCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the Y coordinate" +
-                "where you want to fire: ");
+        while (!gameOver) {
+            System.out.println("Player 1: Take your shot.");
+            gameOver = playerTurn(playerBoardOne, playerBoardTwo);
 
-        if(Integer.valueOf(xCoordinates) > 9 || Integer.valueOf(xCoordinates) < 0){
-            System.out.println("please enter a number between 0 and 9");
-            xCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the X coordinate" +
-                    "where you want to fire: ");
+            if (!gameOver) {
+                System.out.println("Player 2: Take your shot.");
+                gameOver = playerTurn(playerBoardTwo, playerBoardOne);
+            }
         }
+    }
 
-        if(Integer.valueOf(yCoordinates) > 9 || Integer.valueOf(yCoordinates) < 0){
-            System.out.println("please enter a number between 0 and 9");
-            yCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the X coordinate" +
-                    "where you want to fire: ");
-        }
+    private boolean playerTurn(Board playerBoard, Board opponentBoard) {
+        String input;
 
-        coordinates.add(Integer.valueOf(xCoordinates));
-        coordinates.add(Integer.valueOf(yCoordinates));
+        displayPlayerView(playerBoard, opponentBoard);
+
+        input = prompter.prompt("Enter location to shoot at [A0 to J9]: ", "[aA-jJ][0-9]", "" );
+
+        int row = Character.getNumericValue(input.charAt(0)) - 10;
+        int column = Character.getNumericValue(input.charAt(1));
+
+        opponentBoard.checkShot(column, row);
+
+        return opponentBoard.stillAlive();
+    }
+
+    private void displayPlayerView(Board playerBoard, Board opponentBoard) {
+        System.out.println("Your Ships");
+        playerBoard.displayStrategic();
+        System.out.println("Shots Taken");
+        opponentBoard.displayShots();
     }
 
     //might not use
     private void exit() {
 
+    }
+
+    boolean validateCoordinate(String input) {
+        return input.matches("[aA-jJ][0-9]");
     }
 
 }
