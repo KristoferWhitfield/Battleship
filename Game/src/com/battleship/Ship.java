@@ -1,14 +1,9 @@
 package com.battleship;
 
 public class Ship {
-//location is on the map
-// field is sunk
-// everytime ship gets hit ship loses a hitpoint
-
     private int shipHealth;
     private ShipType ship;
     private boolean isSunk = false;
-
 
     public Ship(ShipType ship, int shipHealth){
         setShipType(ship);
@@ -47,6 +42,10 @@ public class Ship {
         } else if (ship.equals(ship.PATROL_BOAT)){
             this.shipHealth = 2;
         }
+    }
+
+    public boolean isSunk() {
+        return isSunk;
     }
 
     @Override
