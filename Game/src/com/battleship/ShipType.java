@@ -1,7 +1,5 @@
 package com.battleship;
-//ship type
-// hitpoints
-//locations
+
 public enum ShipType {
 
     CARRIER(5),

@@ -17,20 +17,6 @@ public class BoardFactoryTest {
         factory = new BoardFactory();
     }
 
-    @Test
-    public void validateOrientation_shouldReturnTrue() {
-        assertTrue(factory.validateOrientation("H"));
-    }
-
-    @Test
-    public void validateCoordinate_shouldReturnTrue_validInput() {
-        assertTrue(factory.validateCoordinate("A9"));
-    }
-
-    @Test
-    public void validateCoordinate_shouldReturnFalse_invalidInput() {
-        assertFalse(factory.validateCoordinate("A15"));
-    }
 
     @Test
     public void validateShipLocation_shouldReturnTrue_emptyGrid() {

@@ -5,9 +5,8 @@ import java.util.*;
 import static com.battleship.Marker.*;
 
 public class BoardFactory {
-    Map<Integer, ArrayList<Marker>> boardMap;
 
-    void addShip(String coord, String orientation, ShipType ship,
+    static void addShip(String coord, String orientation, ShipType ship,
             Map<Integer, ArrayList<Marker>> map) {
         int xb = 0;
         int yb = 0;
@@ -49,15 +48,7 @@ public class BoardFactory {
         }
     }
 
-    boolean validateOrientation(String input) {
-        return input.matches("[v|V]|[h|H]");
-    }
-
-    boolean validateCoordinate(String input) {
-        return input.matches("[aA-jJ][0-9]");
-    }
-
-    boolean validateShipLocation(String coord, String orientation, int size,
+    static boolean validateShipLocation(String coord, String orientation, int size,
             Board board) {
         boolean spotAvailable = true;
         boolean inBounds = true;
@@ -101,7 +92,7 @@ public class BoardFactory {
         return spotAvailable && inBounds;
     }
 
-    public Board newRandom() {
+    public static Board newRandom() {
         Board board = new Board(createMap());
 
         for (ShipType ship : ShipType.values()) {
@@ -111,12 +102,10 @@ public class BoardFactory {
         return board;
     }
 
-    public Board addRandom(Board board, ShipType ship) {
+    private static void addRandom(Board board, ShipType ship) {
         boolean validLoc = false;
         String coord = null;
         String orientation = null;
-
-        Map<Integer, ArrayList<Marker>> randMap = createMap();
 
         int rand1;
         int rand2;
@@ -140,15 +129,13 @@ public class BoardFactory {
         }
 
         addShip(coord, orientation, ship, board.getMap());
-
-        return board;
     }
 
     static Map<Integer, ArrayList<Marker>> createMap() {
-        Map<Integer, ArrayList<Marker>> newMap = new HashMap();
+        Map<Integer, ArrayList<Marker>> newMap = new HashMap<>();
 
         for (int i = 0; i < 10; i++) {
-            newMap.put(i, new ArrayList<Marker>
+            newMap.put(i, new ArrayList<>
                     (Arrays.asList(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)));
         }
 
