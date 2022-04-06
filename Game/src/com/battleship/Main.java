@@ -1,7 +1,5 @@
 package com.battleship;
 
-import java.util.Scanner;
-
 /**
  *  This launches the controller for the Battleship game.
  */
