@@ -22,7 +22,11 @@ public class Game {
     public void start() throws FileNotFoundException {
 
         welcome();
+
+        instructions();
+
         System.out.println("PLAYER 1");
+
         playerBoardOne = playerSetup();
         Console.clear();
         System.out.println("PLAYER 2");
@@ -33,6 +37,8 @@ public class Game {
         exit();
     }
 
+
+
     private void welcome() throws FileNotFoundException {
         File file = new File("welcome.txt");
         Scanner scan = new Scanner(file);
@@ -41,13 +47,26 @@ public class Game {
         }
     }
 
+    private void instructions() throws FileNotFoundException {
+        String response = "";
+        response = prompter.prompt("Would you like to read the instructions? [Y/N]: ", "[yY]|[nN]", "");
+        if (response.matches("[yY]")) {
+            File file = new File("Instructions.txt");
+            Scanner scan = new Scanner(file);
+            while (scan.hasNextLine()) {
+                System.out.println(scan.nextLine());
+            }
+        }
+
+    }
+
     private Board playerSetup() {
         Board board = null;
         String input = "";
-        // TODO: Convert to prompter
-        while (!input.matches("[yY]|[nN]")) {
-            input = prompter.prompt("Would you like to play with random boards? [Y/N]: ");
-        }
+
+
+        input = prompter.prompt("Would you like to play with random boards? [Y/N]: ", "[yY]|[nN]", "");
+
 
         if (input.matches("[yY]")) {
             board = BoardFactory.newRandom();

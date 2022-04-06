@@ -75,12 +75,11 @@ class Board {
         Console.blankLines(1);
 
         if (result) {
-            System.out.println("H H  I  TTT");
-            System.out.println("HHH  I   T");
-            System.out.println("H H  I   T");
+            System.out.println("You've scored a hit on an enemies ship.");
+
         }
         else {
-            System.out.println("MISS");
+            System.out.println("That was a miss! Fire again on the next turn.");
 
         }
         prompter.prompt("Press enter to continue.");
