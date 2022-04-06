@@ -63,6 +63,14 @@ public class BoardFactoryTest {
     }
 
     @Test
+    public void newRandomTest() {
+
+        Board board = factory.newRandom();
+
+        board.displayStrategic();
+    }
+
+    @Test
     public void createMap() {
         Map<Integer, ArrayList<Marker>> map = factory.createMap();
 

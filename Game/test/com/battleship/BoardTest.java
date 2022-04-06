@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.battleship.Marker.*;
-import static org.junit.Assert.*;
 
 public class BoardTest {
     Map<Integer, ArrayList<Marker>> testMap;
@@ -23,7 +22,7 @@ public class BoardTest {
 
     @Test
     public void displayFull() {
-        board.displayFull();
+        board.displayStrategic();
     }
 
     @Test
@@ -41,13 +40,13 @@ public class BoardTest {
         map.put(2, new ArrayList<Marker>
                 (Arrays.asList(CARRIER, PATROL_BOAT, PATROL_BOAT, EMPTY, MISS, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY)));
         map.put(3, new ArrayList<Marker>
-                (Arrays.asList(CARRIER, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, EMPTY, EMPTY)));
+                (Arrays.asList(HIT, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, EMPTY, EMPTY)));
         map.put(4, new ArrayList<Marker>
-                (Arrays.asList(CARRIER, EMPTY, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, EMPTY)));
+                (Arrays.asList(HIT, EMPTY, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, EMPTY)));
         map.put(5, new ArrayList<Marker>
                 (Arrays.asList(CARRIER, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, EMPTY, SUBMARINE)));
         map.put(6, new ArrayList<Marker>
-                (Arrays.asList(EMPTY, EMPTY, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, SUBMARINE)));
+                (Arrays.asList(EMPTY, EMPTY, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, EMPTY, HIT)));
         map.put(7, new ArrayList<Marker>
                 (Arrays.asList(EMPTY, EMPTY, EMPTY, MISS, EMPTY, MISS, EMPTY, MISS, EMPTY, SUBMARINE)));
         map.put(8, new ArrayList<Marker>
