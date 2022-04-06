@@ -1,0 +1,14 @@
+
+Hello commanders welcome to Battleship!
+
+First each player chooses to either have randomly generated game or select where to place your ship.
+
+If player decides to place ships, the player then decides what coordinates to place their ships.
+If coordinates are outside the game board, or conflicts with another ship placement, the player
+will be prompted again to enter a coordinate.
+
+Player one then selects their coordinates where to fire.
+
+After player one fires, press enter to change turns.
+
+First player to sink all opponents battleships win.
