@@ -95,6 +95,7 @@ public class Game {
 
             validLoc = factory.validateShipLocation(coord, orientation, ship.getSize(), board);
         }
+
         factory.addShip(coord, orientation, ship, board.getMap());
     }
 
