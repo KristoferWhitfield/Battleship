@@ -5,13 +5,14 @@ import java.util.*;
 import static com.battleship.Marker.*;
 
 public class BoardFactory {
+    static Board board = newInstance();
 
     static void addShip(String coord, String orientation, ShipType ship,
             Map<Integer, ArrayList<Marker>> map) {
-        int xb = 0;
-        int yb = 0;
-        int ya = Character.getNumericValue(coord.charAt(0)) - 10;
-        int xa = Character.getNumericValue(coord.charAt(1));
+        int hEnd = 0;
+        int vEnd = 0;
+        int vStart = Character.getNumericValue(coord.charAt(0)) - 10;
+        int hStart = Character.getNumericValue(coord.charAt(1));
 
         Marker marker = null;
         switch (ship) {
@@ -32,58 +33,65 @@ public class BoardFactory {
                 break;
         }
 
-        if (orientation.equals("H")) {
-            xb = xa + ship.getSize();
+        if (orientation.equalsIgnoreCase("h")) {
+            hEnd = hStart + ship.getSize();
 
-            for (int i = xa; i < xb; i++) {
-                map.get(ya).set(i, marker);
+            for (int i = hStart; i < hEnd; i++) {
+                map.get(vStart).set(i, marker);
             }
 
         } else {
-            yb = ya + ship.getSize();
+            vEnd = vStart + ship.getSize();
 
-            for (int i = ya; i < yb; i++) {
-                map.get(i).set(xa, marker);
+            for (int i = vStart; i < vEnd; i++) {
+                map.get(i).set(hStart, marker);
             }
         }
+
+        board = new Board(map);
+        List<String> display = board.displayStrategic();
+        for (String s: display) {
+            System.out.println(s);
+        }
+        System.out.println();
     }
 
     static boolean validateShipLocation(String coord, String orientation, int size,
             Board board) {
         boolean spotAvailable = true;
         boolean inBounds = true;
-        int xb = 0;
-        int yb = 0;
+        int hEnd = 0;
+        int vEnd = 0;
 
-        int ya = Character.getNumericValue(coord.charAt(0)) - 10;
-        int xa = Character.getNumericValue(coord.charAt(1));
+        int vStart = Character.getNumericValue(coord.charAt(0)) - 10;
+        int hStart = Character.getNumericValue(coord.charAt(1));
 
-        if (orientation.equals("H")) {
-            xb = xa + size;
+        if (orientation.equalsIgnoreCase("h")) {
+            hEnd = hStart + size - 1;
 
-            if (xb >= 10) {
+            if (hEnd >= 10) {
                 inBounds = false;
             }
             else {
-                for (int i = xa; i < xb; i++) {
-                    if (board.getMap().get(ya).get(i) != EMPTY) {
+                for (int i = hStart; i <= hEnd; i++) {
+                    if (board.getMap().get(vStart).get(i) != EMPTY) {
                         spotAvailable = false;
-                        break;
                     }
                 }
             }
         }
         else {
-            yb = ya + size;
+            vEnd = vStart + size - 1;
 
-            if (yb >= 10) {
+            if (vEnd >= 10) {
                 inBounds = false;
             }
             else {
-                for (int i = ya; i < yb; i++) {
-                    if (board.getMap().get(i).get(xa) != EMPTY) {
+                for (int i = vStart; i <= vEnd; i++) {
+                    Marker markTest = board.getMap().get(i).get(hStart);
+                    System.out.println("VTEST: " + markTest);
+                    if (board.getMap().get(i).get(hStart) != EMPTY) {
                         spotAvailable = false;
-                        break;
                     }
                 }
             }
