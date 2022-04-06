@@ -8,7 +8,7 @@ public enum ShipType {
     BATTLESHIP(4),
     DESTROYER( 3),
     SUBMARINE(2),
-    PATROL_BOAT(1);
+    PATROL_BOAT(2);
 
     private final int size;
 

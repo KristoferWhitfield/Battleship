@@ -21,6 +21,7 @@ class Board {
         }
     }
 
+    // TODO: 4/5/2022 get the coordinates from (battle) 
     public boolean checkShot(int x, int y) {
         boolean result = false;
         int shipSize = -1;
