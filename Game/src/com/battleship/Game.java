@@ -1,9 +1,12 @@
 package com.battleship;
 
+import com.apps.util.Prompter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Prompter;
+
 
 
 /**
@@ -20,7 +23,8 @@ public class Game {
 
     private static Scanner in = new Scanner(System.in);
 
-    public void start() {
+
+    public void start() throws FileNotFoundException {
 
         welcome();
         playerBoardOne = playerSetup();
@@ -45,7 +49,7 @@ public class Game {
 //                "---/__ /----/__|---/------/------/------/__-------\\-------/___ /------/----/____/-\n" +
 //                "  /    )   /   |  /      /      /      /           \\     /    /      /    /       \n" +
 //                "_/____/___/____|_/______/______/____/_/____ ___(____/___/____/____ _/_ __/________");
-        File file = new File("C:\StudentWork\MiniProject\Battleship\welcome.txt");
+        File file = new File("C:\\StudentWork\\MiniProject\\Battleship\\welcome.txt");
         Scanner scan = new Scanner(file);
         while (scan.hasNextLine()) {
             System.out.println(scan.nextLine());
@@ -95,10 +99,36 @@ public class Game {
     }
 
 
-
+    // pass in the map
     private void battle() {
+        ArrayList<Integer> coordinates = new ArrayList<Integer>();
+        // TODO: 4/5/2022 add in validation that the user only entered a number between 0 and 9
+        // TODO: 4/5/2022 convert int to string
+        // TODO: 4/5/2022 add explaniation of game to notepad
         Prompter prompter = new Prompter(new Scanner(System.in));
-        String fire = prompter.prompt("Please enter coordinates where to fire: ");
+        // tell the player what kind of coordinate 2 numbers between 0 and 9
+
+        // both values in array list
+        //x arraylist. 0 and y arraylist .1
+        String xCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the X coordinate" +
+                "where you want to fire: ");
+        String yCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the Y coordinate" +
+                "where you want to fire: ");
+
+        if(Integer.valueOf(xCoordinates) > 9 || Integer.valueOf(xCoordinates) < 0){
+            System.out.println("please enter a number between 0 and 9");
+            xCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the X coordinate" +
+                    "where you want to fire: ");
+        }
+
+        if(Integer.valueOf(yCoordinates) > 9 || Integer.valueOf(yCoordinates) < 0){
+            System.out.println("please enter a number between 0 and 9");
+            yCoordinates = prompter.prompt("Please enter a number between 0 and 9 to enter the X coordinate" +
+                    "where you want to fire: ");
+        }
+
+        coordinates.add(Integer.valueOf(xCoordinates));
+        coordinates.add(Integer.valueOf(yCoordinates));
     }
 
     //might not use
