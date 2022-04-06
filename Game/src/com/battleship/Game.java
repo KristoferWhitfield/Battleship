@@ -1,9 +1,11 @@
 package com.battleship;
 
+import com.apps.util.Console;
 import com.apps.util.Prompter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -20,7 +22,10 @@ public class Game {
     public void start() throws FileNotFoundException {
 
         welcome();
+        System.out.println("PLAYER 1");
         playerBoardOne = playerSetup();
+        Console.clear();
+        System.out.println("PLAYER 2");
         playerBoardTwo = playerSetup();
 
         battle();
@@ -64,7 +69,7 @@ public class Game {
         String orientation = null;
 
         while (!validLoc) {
-
+            Console.clear();
             coord = prompter.prompt(String.format("Enter location for the %s [A0 to J9]: ", ship),
                                     "[aA-jJ][0-9]", "" );
 
@@ -80,13 +85,17 @@ public class Game {
     // pass in the map
     private void battle() {
         boolean gameOver = false;
+        Console.clear();
 
         while (!gameOver) {
-            System.out.println("Player 1: Take your shot.");
+            System.out.println  ("                                       Player 1: Take your shot.");
+            System.out.println("                                    Your Ships    |    Shots Taken");
+
             gameOver = playerTurn(playerBoardOne, playerBoardTwo);
 
             if (!gameOver) {
-                System.out.println("Player 2: Take your shot.");
+                System.out.println  ("                                       Player 2: Take your shot.");
+                System.out.println("                                    Your Ships    |    Shots Taken");
                 gameOver = playerTurn(playerBoardTwo, playerBoardOne);
             }
         }
@@ -108,10 +117,12 @@ public class Game {
     }
 
     private void displayPlayerView(Board playerBoard, Board opponentBoard) {
-        System.out.println("Your Ships");
-        playerBoard.displayStrategic();
-        System.out.println("Shots Taken");
-        opponentBoard.displayShots();
+        List<String> strategicView = playerBoard.displayStrategic();
+        List<String> shotView = opponentBoard.displayShots();
+
+        for (int i = 0; i < strategicView.size(); i++) {
+            System.out.println(strategicView.get(i) + "    |   " + shotView.get(i));
+        }
     }
 
     //might not use

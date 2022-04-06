@@ -5,6 +5,11 @@ public class Ship {
     private ShipType ship;
     private boolean isSunk = false;
 
+    public Ship(ShipType ship){
+        setShipType(ship);
+        setShipHealth(ship.getSize());
+    }
+
     public Ship(ShipType ship, int shipHealth){
         setShipType(ship);
         setShipHealth(shipHealth);
