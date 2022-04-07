@@ -88,8 +88,6 @@ public class BoardFactory {
             }
             else {
                 for (int i = vStart; i <= vEnd; i++) {
-                    Marker markTest = board.getMap().get(i).get(hStart);
-                    System.out.println("VTEST: " + markTest);
                     if (board.getMap().get(i).get(hStart) != EMPTY) {
                         spotAvailable = false;
                     }
