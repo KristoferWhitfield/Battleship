@@ -56,6 +56,8 @@ class Board {
             result = true;
         }
 
+        Console.clear();
+
         if (result) {
             for (Ship s: ships) {
                 if (s.getShip().equals(hitShip)) {
@@ -71,18 +73,18 @@ class Board {
 
     private void shotResult(boolean result) {
         Prompter prompter = new Prompter(new Scanner(System.in));
-        Console.clear();
+
         Console.blankLines(1);
 
         if (result) {
-            System.out.println("You've scored a hit on an enemies ship.");
-
+            System.out.println("You've scored a hit on an enemies ship!");
         }
         else {
             System.out.println("That was a miss! Fire again on the next turn.");
 
         }
         prompter.prompt("Press enter to continue.");
+        Console.clear();
     }
 
     public List<String> displayStrategic() {
@@ -132,7 +134,6 @@ class Board {
                     single.append("  : ");
                 }
                 single.append(RESET);
-
             }
             lines.add(single.toString());
         }
