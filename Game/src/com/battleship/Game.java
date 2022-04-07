@@ -20,28 +20,27 @@ public class Game {
     private static Scanner in = new Scanner(System.in);
 
     public void start() throws FileNotFoundException {
-
         welcome();
 
         instructions();
 
+        Console.blankLines(3);
         System.out.println("PLAYER 1");
 
         playerBoardOne = playerSetup();
+
         Console.clear();
         System.out.println("PLAYER 2");
+
         playerBoardTwo = playerSetup();
 
         battle();
-
-        exit();
     }
 
-
-
     private void welcome() throws FileNotFoundException {
-        File file = new File("welcome.txt");
+        File file = new File("data/welcome.txt");
         Scanner scan = new Scanner(file);
+
         while (scan.hasNextLine()) {
             System.out.println(scan.nextLine());
         }
@@ -50,23 +49,23 @@ public class Game {
     private void instructions() throws FileNotFoundException {
         String response = "";
         response = prompter.prompt("Would you like to read the instructions? [Y/N]: ", "[yY]|[nN]", "");
+
         if (response.matches("[yY]")) {
-            File file = new File("Instructions.txt");
+            Console.clear();
+            File file = new File("data/Instructions.txt");
             Scanner scan = new Scanner(file);
+
             while (scan.hasNextLine()) {
                 System.out.println(scan.nextLine());
             }
         }
-
     }
 
     private Board playerSetup() {
         Board board = null;
         String input = "";
 
-
-        input = prompter.prompt("Would you like to play with random boards? [Y/N]: ", "[yY]|[nN]", "");
-
+        input = prompter.prompt("Would you like to play with a randomly generated ship configuration? [Y/N]: ", "[yY]|[nN]", "");
 
         if (input.matches("[yY]")) {
             board = BoardFactory.newRandom();
@@ -88,7 +87,6 @@ public class Game {
         String orientation = null;
 
         while (!validLoc) {
-            Console.clear();
             coord = prompter.prompt(String.format("Enter location for the %s [A0 to J9]: ", ship),
                                     "[aA-jJ][0-9]", "" );
 
@@ -97,13 +95,13 @@ public class Game {
             validLoc = BoardFactory.validateShipLocation(coord, orientation, ship.getSize(), board);
         }
 
+        Console.clear();
         BoardFactory.addShip(coord, orientation, ship, board.getMap());
     }
 
-
-    // pass in the map
-    private void battle() {
+    private void battle() throws FileNotFoundException {
         boolean gameOver = false;
+        int winner = 0;
         Console.clear();
 
         while (!gameOver) {
@@ -111,13 +109,44 @@ public class Game {
             System.out.println("                                    Your Ships    |    Shots Taken");
 
             gameOver = playerTurn(playerBoardOne, playerBoardTwo);
+            if (gameOver) {
+                winner = 1;
+            }
 
             if (!gameOver) {
                 System.out.println  ("                                       Player 2: Take your shot.");
                 System.out.println("                                    Your Ships    |    Shots Taken");
                 gameOver = playerTurn(playerBoardTwo, playerBoardOne);
+
+                if(gameOver) {
+                    winner = 2;
+                }
+            }
+
+            if (winner > 0) {
+                playerWins(winner);
             }
         }
+    }
+
+    private void playerWins(int winner) throws FileNotFoundException {
+        String filepath = null;
+
+        if (winner == 1) {
+            filepath = "data/player1wins.txt";
+        }
+        else {
+            filepath = "data/player2wins.txt";
+        }
+
+        File file = new File(filepath);
+        Scanner scan = new Scanner(file);
+        while (scan.hasNextLine()) {
+            System.out.println(scan.nextLine());
+        }
+
+        Console.blankLines(3);
+        prompter.prompt("Press enter to close game.");
     }
 
     private boolean playerTurn(Board playerBoard, Board opponentBoard) {
@@ -143,14 +172,4 @@ public class Game {
             System.out.println(strategicView.get(i) + "    |   " + shotView.get(i));
         }
     }
-
-    //might not use
-    private void exit() {
-
-    }
-
-    boolean validateCoordinate(String input) {
-        return input.matches("[aA-jJ][0-9]");
-    }
-
 }
